@@ -1,5 +1,5 @@
 Imports System.Data.SqlClient
-Imports System.Configuration.ConfigurationSettings
+Imports System.Configuration
 
 Public Class Definitions
     Inherits CollectionBase
@@ -26,11 +26,11 @@ Public Class Definitions
     End Function
 
     Private Function GetDefinition(ByVal Word As String, ByVal MatchExact As Boolean) As Boolean
-        Dim dtr As SqlDataReader
+		Dim dtr As SqlDataReader = Nothing
 
         Try
             Dim strSQL As String = "bible_SearchDictionary_Eastons"
-            Dim cnn As New SqlConnection(AppSettings("DataConn"))
+			Dim cnn As New SqlConnection(ConfigurationManager.AppSettings("DataConn"))
             Dim cmd As New SqlCommand(strSQL, cnn)
             Dim blnHasRows As Boolean
 
@@ -57,16 +57,18 @@ Public Class Definitions
             blnHasRows = dtr.HasRows
             dtr.Close()
             Return blnHasRows
-        Catch ex As Exception
-            If Not dtr.IsClosed Then
-                dtr.Close()
-            End If
+		Catch ex As Exception
+			If dtr IsNot Nothing Then
+				If Not dtr.IsClosed Then
+					dtr.Close()
+				End If
+			End If
 
-            Dim d As New Definition
-            d.Word = "Error"
-            d.DefinitionText = ex.ToString
-            list.Add(d)
-            Return False
+			Dim d As New Definition
+			d.Word = "Error"
+			d.DefinitionText = ex.ToString
+			List.Add(d)
+			Return False
         End Try
     End Function
 End Class

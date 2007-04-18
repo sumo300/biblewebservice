@@ -1,5 +1,5 @@
 Imports System.Data.SqlClient
-Imports System.Configuration.ConfigurationSettings
+Imports System.Configuration
 Imports System.Security.Cryptography
 Imports System.Text
 
@@ -76,7 +76,7 @@ Public Class User
     Public Function Add() As Boolean
         If _Username <> "" And _Password <> "" Then
             Dim strSQL As String = "bible_AddUser"
-            Dim cnn As New SqlConnection(AppSettings("DataConn"))
+			Dim cnn As New SqlConnection(ConfigurationManager.AppSettings("DataConn"))
             Dim cmd As New SqlCommand(strSQL, cnn)
             Dim prmPassword As New SqlParameter
             Dim md5Hasher As New MD5CryptoServiceProvider
@@ -114,7 +114,7 @@ Public Class User
 
     Public Function Validate(ByVal Token As String, ByVal Username As String, ByVal Password As String) As Boolean
         Dim strSQL As String = "bible_ValidateUser"
-        Dim cnn As New SqlConnection(AppSettings("DataConn"))
+		Dim cnn As New SqlConnection(ConfigurationManager.AppSettings("DataConn"))
         Dim cmd As New SqlCommand(strSQL, cnn)
         Dim prmRetVal As New SqlParameter
         Dim prmToken As New SqlParameter

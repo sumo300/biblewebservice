@@ -1,5 +1,6 @@
 Imports System.Data.SqlClient
 Imports System.Configuration.ConfigurationSettings
+Imports System.Configuration
 
 Public Class BibleTranslations
     Inherits CollectionBase
@@ -22,11 +23,11 @@ Public Class BibleTranslations
     End Sub
 
     Public Function Find() As Boolean
-        Dim dtr As SqlDataReader
+		Dim dtr As SqlDataReader = Nothing
 
         Try
             Dim strSQL As String = "bible_GetTranslations"
-            Dim cnn As New SqlConnection(AppSettings("DataConn"))
+			Dim cnn As New SqlConnection(ConfigurationManager.AppSettings("DataConn"))
             Dim cmd As New SqlCommand(strSQL, cnn)
             Dim blnHasRows As Boolean
 
@@ -48,16 +49,18 @@ Public Class BibleTranslations
             blnHasRows = dtr.HasRows
             dtr.Close()
             Return blnHasRows
-        Catch sx As SqlException
-            If Not dtr.IsClosed Then
-                dtr.Close()
-            End If
+		Catch sx As SqlException
+			If dtr IsNot Nothing Then
+				If Not dtr.IsClosed Then
+					dtr.Close()
+				End If
+			End If
 
-            Dim bt As New BibleTranslation
-            bt.BibleNo = -1
-            bt.BibleName = sx.ToString
-            list.Add(bt)
-            Return False
+			Dim bt As New BibleTranslation
+			bt.BibleNo = -1
+			bt.BibleName = sx.ToString
+			List.Add(bt)
+			Return False
         Catch ex As Exception
             If Not dtr.IsClosed Then
                 dtr.Close()
