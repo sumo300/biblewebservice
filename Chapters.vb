@@ -1,5 +1,5 @@
 Imports System.Data.SqlClient
-Imports System.Configuration.ConfigurationSettings
+Imports System.Configuration
 
 Public Class Chapters
     Inherits CollectionBase
@@ -22,11 +22,11 @@ Public Class Chapters
     End Sub
 
     Public Function Find(ByVal BibleID As Integer, ByVal BookID As Integer, ByVal PopulateVerses As Boolean) As Boolean
-        Dim dtr As SqlDataReader
+		Dim dtr As SqlDataReader = Nothing
 
         Try
             Dim strSQL As String = "bible_GetChapters"
-            Dim cnn As New SqlConnection(AppSettings("DataConn"))
+			Dim cnn As New SqlConnection(ConfigurationManager.AppSettings("DataConn"))
             Dim cmd As New SqlCommand(strSQL, cnn)
             Dim blnHasRows As Boolean
 
@@ -54,15 +54,17 @@ Public Class Chapters
             blnHasRows = dtr.HasRows
             dtr.Close()
             Return blnHasRows
-        Catch ex As Exception
-            If Not dtr.IsClosed Then
-                dtr.Close()
-            End If
+		Catch ex As Exception
+			If dtr IsNot Nothing Then
+				If Not dtr.IsClosed Then
+					dtr.Close()
+				End If
+			End If
 
-            Dim c As New Chapter
-            c.ChapterNo = -1
-            list.Add(c)
-            Return False
+			Dim c As New Chapter
+			c.ChapterNo = -1
+			List.Add(c)
+			Return False
         End Try
     End Function
 End Class

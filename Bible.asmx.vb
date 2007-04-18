@@ -1,7 +1,7 @@
 Imports System.Web.Services
 Imports System.Data.SqlClient
-Imports System.Configuration.ConfigurationSettings
 Imports System.Security.Cryptography
+Imports System.Configuration
 Imports System.Text
 
 <System.Web.Services.WebService(Namespace:="http://bible.sumerano.com/")> _
@@ -124,8 +124,8 @@ Public Class Bible
     End Function
 
     Private Function ValidateUser(ByVal st As SecurityToken) As Boolean
-        Dim strSQL As String = "bible_ValidateUser"
-        Dim cnn As New SqlConnection(AppSettings("DataConn"))
+		Dim strSQL As String = "bible_ValidateUser"
+		Dim cnn As New SqlConnection(ConfigurationManager.AppSettings("DataConn"))
         Dim cmd As New SqlCommand(strSQL, cnn)
         Dim prmRetValue As New SqlParameter
 

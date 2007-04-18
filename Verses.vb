@@ -1,5 +1,5 @@
 Imports System.Data.SqlClient
-Imports System.Configuration.ConfigurationSettings
+Imports System.Configuration
 
 Public Class Verses
     Inherits CollectionBase
@@ -22,11 +22,11 @@ Public Class Verses
     End Sub
 
     Public Function Find(ByVal BibleID As Integer, ByVal BookID As Integer, ByVal Chapter As Integer) As Boolean
-        Dim dtr As SqlDataReader
+		Dim dtr As SqlDataReader = Nothing
 
         Try
             Dim strSQL As String = "bible_GetChapterVerses"
-            Dim cnn As New SqlConnection(AppSettings("DataConn"))
+			Dim cnn As New SqlConnection(ConfigurationManager.AppSettings("DataConn"))
             Dim cmd As New SqlCommand(strSQL, cnn)
             Dim blnHasRows As Boolean
 
@@ -49,35 +49,39 @@ Public Class Verses
             blnHasRows = dtr.HasRows
             dtr.Close()
             Return blnHasRows
-        Catch sx As SqlException
-            If Not dtr.IsClosed Then
-                dtr.Close()
-            End If
+		Catch sx As SqlException
+			If dtr IsNot Nothing Then
+				If Not dtr.IsClosed Then
+					dtr.Close()
+				End If
+			End If
 
-            Dim v As New Verse
-            v.VerseNo = -1
-            v.VerseText = sx.ToString
-            list.Add(v)
-            Return False
-        Catch ex As Exception
-            If Not dtr.IsClosed Then
-                dtr.Close()
-            End If
+			Dim v As New Verse
+			v.VerseNo = -1
+			v.VerseText = sx.ToString
+			List.Add(v)
+			Return False
+		Catch ex As Exception
+			If dtr IsNot Nothing Then
+				If Not dtr.IsClosed Then
+					dtr.Close()
+				End If
+			End If
 
-            Dim v As New Verse
-            v.VerseNo = -1
-            v.VerseText = ex.ToString
-            list.Add(v)
-            Return False
+			Dim v As New Verse
+			v.VerseNo = -1
+			v.VerseText = ex.ToString
+			List.Add(v)
+			Return False
         End Try
     End Function
 
     Public Function Find(ByVal BibleID As Integer, ByVal BookID As Integer, ByVal Chapter As Integer, ByVal Verse As Integer) As Boolean
-        Dim dtr As SqlDataReader
+		Dim dtr As SqlDataReader = Nothing
 
         Try
             Dim strSQL As String = "bible_GetChapterVerse"
-            Dim cnn As New SqlConnection(AppSettings("DataConn"))
+			Dim cnn As New SqlConnection(ConfigurationManager.AppSettings("DataConn"))
             Dim cmd As New SqlCommand(strSQL, cnn)
             Dim blnHasRows As Boolean
 
@@ -101,35 +105,39 @@ Public Class Verses
             blnHasRows = dtr.HasRows
             dtr.Close()
             Return blnHasRows
-        Catch sx As SqlException
-            If Not dtr.IsClosed Then
-                dtr.Close()
-            End If
+		Catch sx As SqlException
+			If dtr IsNot Nothing Then
+				If Not dtr.IsClosed Then
+					dtr.Close()
+				End If
+			End If
 
-            Dim v As New Verse
-            v.VerseNo = -1
-            v.VerseText = sx.ToString
-            list.Add(v)
-            Return False
-        Catch ex As Exception
-            If Not dtr.IsClosed Then
-                dtr.Close()
-            End If
+			Dim v As New Verse
+			v.VerseNo = -1
+			v.VerseText = sx.ToString
+			List.Add(v)
+			Return False
+		Catch ex As Exception
+			If dtr IsNot Nothing Then
+				If Not dtr.IsClosed Then
+					dtr.Close()
+				End If
+			End If
 
-            Dim v As New Verse
-            v.VerseNo = -1
-            v.VerseText = ex.ToString
-            list.Add(v)
-            Return False
+			Dim v As New Verse
+			v.VerseNo = -1
+			v.VerseText = ex.ToString
+			List.Add(v)
+			Return False
         End Try
     End Function
 
     Public Function Find(ByVal BibleID As Integer, ByVal BookID As Integer, ByVal ChapterStart As Integer, ByVal ChapterEnd As Integer, ByVal VerseStart As Integer, ByVal VerseEnd As Integer) As Boolean
-        Dim dtr As SqlDataReader
+		Dim dtr As SqlDataReader = Nothing
 
         Try
             Dim strSQL As String = "bible_GetVerseRange"
-            Dim cnn As New SqlConnection(AppSettings("DataConn"))
+			Dim cnn As New SqlConnection(ConfigurationManager.AppSettings("DataConn"))
             Dim cmd As New SqlCommand(strSQL, cnn)
             Dim blnHasRows As Boolean
 
@@ -155,36 +163,40 @@ Public Class Verses
             blnHasRows = dtr.HasRows
             dtr.Close()
             Return blnHasRows
-        Catch sx As SqlException
-            If Not dtr.IsClosed Then
-                dtr.Close()
-            End If
+		Catch sx As SqlException
+			If dtr IsNot Nothing Then
+				If Not dtr.IsClosed Then
+					dtr.Close()
+				End If
+			End If
 
-            Dim v As New Verse
-            v.VerseNo = -1
-            v.VerseText = sx.ToString
-            list.Add(v)
-            Return False
-        Catch ex As Exception
-            If Not dtr.IsClosed Then
-                dtr.Close()
-            End If
+			Dim v As New Verse
+			v.VerseNo = -1
+			v.VerseText = sx.ToString
+			List.Add(v)
+			Return False
+		Catch ex As Exception
+			If dtr IsNot Nothing Then
+				If Not dtr.IsClosed Then
+					dtr.Close()
+				End If
+			End If
 
-            Dim v As New Verse
-            v.VerseNo = -1
-            v.VerseText = ex.ToString
-            list.Add(v)
-            Return False
+			Dim v As New Verse
+			v.VerseNo = -1
+			v.VerseText = ex.ToString
+			List.Add(v)
+			Return False
         End Try
     End Function
 
 
     Public Function Random(ByVal BibleID As Integer) As Books
-        Dim dtr As SqlDataReader
+		Dim dtr As SqlDataReader = Nothing
 
         Try
             Dim strSQL As String = "bible_RandomVerse"
-            Dim cnn As New SqlConnection(AppSettings("DataConn"))
+			Dim cnn As New SqlConnection(ConfigurationManager.AppSettings("DataConn"))
             Dim cmd As New SqlCommand(strSQL, cnn)
             Dim blnHasRows As Boolean
             Dim bs As New Books
@@ -219,30 +231,34 @@ Public Class Verses
             dtr.Close()
 
             Return bs
-        Catch sx As SqlException
-            If Not dtr.IsClosed Then
-                dtr.Close()
-            End If
+		Catch sx As SqlException
+			If dtr IsNot Nothing Then
+				If Not dtr.IsClosed Then
+					dtr.Close()
+				End If
+			End If
 
-            Dim bs As New Books
-            Dim b As New Book
-            b.BookNo = -1
-            b.BookText = sx.ToString
-            bs.Add(b)
+			Dim bs As New Books
+			Dim b As New Book
+			b.BookNo = -1
+			b.BookText = sx.ToString
+			bs.Add(b)
 
-            Return bs
-        Catch ex As Exception
-            If Not dtr.IsClosed Then
-                dtr.Close()
-            End If
+			Return bs
+		Catch ex As Exception
+			If dtr IsNot Nothing Then
+				If Not dtr.IsClosed Then
+					dtr.Close()
+				End If
+			End If
 
-            Dim bs As New Books
-            Dim b As New Book
-            b.BookNo = -1
-            b.BookText = ex.ToString
-            bs.Add(b)
+			Dim bs As New Books
+			Dim b As New Book
+			b.BookNo = -1
+			b.BookText = ex.ToString
+			bs.Add(b)
 
-            Return bs
+			Return bs
         End Try
     End Function
 End Class

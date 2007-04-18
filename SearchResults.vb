@@ -1,5 +1,5 @@
 Imports System.Data.SqlClient
-Imports System.Configuration.ConfigurationSettings
+Imports System.Configuration
 
 Public Class SearchResults
     Inherits CollectionBase
@@ -22,15 +22,15 @@ Public Class SearchResults
     End Sub
 
     Public Function Find(ByVal BibleID As Integer, ByVal Keywords As String, ByVal Delimiter As String, ByVal AllWords As Boolean) As Boolean
-        Dim dtr As SqlDataReader
-        Dim cnn As SqlConnection
-        Dim cmd As SqlCommand
+		Dim dtr As SqlDataReader = Nothing
+		Dim cnn As SqlConnection = Nothing
+		Dim cmd As SqlCommand = Nothing
 
         Try
             Dim strSQL As String = "bible_Search"
             Dim blnHasRows As Boolean
 
-            cnn = New SqlConnection(AppSettings("DataConn"))
+			cnn = New SqlConnection(ConfigurationManager.AppSettings("DataConn"))
             cmd = New SqlCommand(strSQL, cnn)
 
             cmd.CommandType = CommandType.StoredProcedure
@@ -59,34 +59,38 @@ Public Class SearchResults
             dtr.Close()
 
             Return blnHasRows
-        Catch sx As SqlException
-            If Not dtr.IsClosed Then
-                dtr.Close()
-            End If
+		Catch sx As SqlException
+			If dtr IsNot Nothing Then
+				If Not dtr.IsClosed Then
+					dtr.Close()
+				End If
+			End If
 
-            Dim sr As New SearchResult
-            sr.BookNo = -1
-            sr.VerseText = sx.ToString
-            list.Add(sr)
-            Return False
-        Catch ex As Exception
-            If Not dtr.IsClosed Then
-                dtr.Close()
-            End If
+			Dim sr As New SearchResult
+			sr.BookNo = -1
+			sr.VerseText = sx.ToString
+			List.Add(sr)
+			Return False
+		Catch ex As Exception
+			If dtr IsNot Nothing Then
+				If Not dtr.IsClosed Then
+					dtr.Close()
+				End If
+			End If
 
-            Dim sr As New SearchResult
-            sr.BookNo = -1
-            sr.VerseText = ex.ToString
-            list.Add(sr)
-            Return False
+			Dim sr As New SearchResult
+			sr.BookNo = -1
+			sr.VerseText = ex.ToString
+			List.Add(sr)
+			Return False
         Finally
-            If Not IsNothing(cmd) Then
-                cmd.Dispose()
-            End If
+			If cmd IsNot Nothing Then
+				cmd.Dispose()
+			End If
 
-            If Not IsNothing(cnn) Then
-                cnn.Dispose()
-            End If
+			If cnn IsNot Nothing Then
+				cnn.Dispose()
+			End If
         End Try
     End Function
 End Class

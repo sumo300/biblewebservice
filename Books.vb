@@ -1,5 +1,5 @@
 Imports System.Data.SqlClient
-Imports System.Configuration.ConfigurationSettings
+Imports System.Configuration
 
 Public Class Books
     Inherits CollectionBase
@@ -22,11 +22,11 @@ Public Class Books
     End Sub
 
     Public Function Find(ByVal BibleID As Integer, ByVal Section As BookSection, ByVal PopulateChapters As Boolean, ByVal PopulateVerses As Boolean) As Boolean
-        Dim dtr As SqlDataReader
+		Dim dtr As SqlDataReader = Nothing
 
         Try
             Dim strSQL As String = "bible_GetBooks"
-            Dim cnn As New SqlConnection(AppSettings("DataConn"))
+			Dim cnn As New SqlConnection(ConfigurationManager.AppSettings("DataConn"))
             Dim cmd As New SqlCommand(strSQL, cnn)
             Dim blnHasRows As Boolean
             Dim strSection As String
@@ -67,16 +67,18 @@ Public Class Books
             blnHasRows = dtr.HasRows
             dtr.Close()
             Return blnHasRows
-        Catch sx As SqlException
-            If Not dtr.IsClosed Then
-                dtr.Close()
-            End If
+		Catch sx As SqlException
+			If dtr IsNot Nothing Then
+				If Not dtr.IsClosed Then
+					dtr.Close()
+				End If
+			End If
 
-            Dim b As New Book
-            b.BookNo = -1
-            b.Booktext = sx.ToString
-            list.Add(b)
-            Return False
+			Dim b As New Book
+			b.BookNo = -1
+			b.BookText = sx.ToString
+			List.Add(b)
+			Return False
         Catch ex As Exception
             If Not dtr.IsClosed Then
                 dtr.Close()
