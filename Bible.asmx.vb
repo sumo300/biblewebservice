@@ -144,7 +144,7 @@ Public Class Bible
         Dim encoder As New UTF8Encoding
         Dim md5Hasher As New MD5CryptoServiceProvider
 
-        hashedDataBytes = md5Hasher.ComputeHash(encoder.GetBytes(st.Password))
+		hashedDataBytes = md5Hasher.ComputeHash(encoder.GetBytes(st.Password))
 
         cmd.Parameters.Add(New SqlParameter("@Password", hashedDataBytes))
 

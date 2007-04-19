@@ -49,7 +49,8 @@ Public Class Definitions
 
                 d.Word = dtr.GetString(0)
                 d.DefinitionText = dtr.GetString(1)
-                d.ExactMatch = d.word.ToLower.Equals(Word.ToLower)
+				'd.ExactMatch = d.Word.ToLower.Equals(Word.ToLower)
+				d.ExactMatch = (String.Compare(d.Word, Word, True) = 0)
 
                 list.Add(d)
             Loop
