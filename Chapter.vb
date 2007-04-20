@@ -15,8 +15,8 @@ Public Class Chapter
         Get
             Return _Verses
         End Get
-        Set(ByVal Value As Verses)
-            _Verses = Value
-        End Set
+		Set(ByVal Value As Verses)
+			_Verses = Value
+		End Set
     End Property
 End Class

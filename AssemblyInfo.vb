@@ -9,10 +9,10 @@ Imports System.Runtime.InteropServices
 ' Review the values of the assembly attributes
 
 <Assembly: AssemblyTitle("Bible Web Service")> 
-<Assembly: AssemblyDescription("Full version of the 1901 American Standard Bible made available through an XML web service.")> 
-<Assembly: AssemblyCompany("Sumerano Designs")> 
+<Assembly: AssemblyDescription("Bible Web Service")> 
+<Assembly: AssemblyCompany("Michael Sumerano")> 
 <Assembly: AssemblyProduct("")> 
-<Assembly: AssemblyCopyright("Copyright (C) 2004 Michael Sumerano")> 
+<Assembly: AssemblyCopyright("Copyright (C) 2004-2007 Michael Sumerano")> 
 <Assembly: AssemblyTrademark("")> 
 <Assembly: CLSCompliant(True)> 
 
@@ -32,3 +32,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 
 <Assembly: AssemblyVersion("2.0.0.0")> 
+
+<Assembly: AssemblyFileVersionAttribute("2.0.0.0")> 
