@@ -31,12 +31,12 @@ Public Class Book
         End Set
     End Property
 
-    Public Property Chapters() As Chapters
-        Get
-            Return _Chapters
-        End Get
-        Set(ByVal Value As Chapters)
-            _Chapters = Value
-        End Set
-    End Property
+	Public Property Chapters() As Chapters
+		Get
+			Return _Chapters
+		End Get
+		Set(ByVal Value As Chapters)
+			_Chapters = Value
+		End Set
+	End Property
 End Class

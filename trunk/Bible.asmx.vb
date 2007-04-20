@@ -46,7 +46,7 @@ Public Class Bible
     <WebMethod(BufferResponse:=True, CacheDuration:=60, Description:="Returns a list of available Bible translations.")> _
     Public Function GetTranslations() As BibleTranslations
         Dim bts As New BibleTranslations
-        Dim blnSuccess As Boolean = bts.Find()
+		bts.Find()
 
         Return bts
     End Function
@@ -54,7 +54,7 @@ Public Class Bible
     <WebMethod(BufferResponse:=True, CacheDuration:=60, Description:="Returns a list of all books within the bible.  You have the option of returning all books or a specific section (Old Testament or New Testament).  If PopulateChapters and PopulateVerses are set to True, the *entire* Bible text will be returned.")> _
     Public Function GetBooks(ByVal TranslationNo As Integer, ByVal Section As BookSection, ByVal PopulateChapters As Boolean, ByVal PopulateVerses As Boolean) As Books
         Dim bs As New Books
-        Dim blnSuccess As Boolean = bs.Find(TranslationNo, Section, PopulateChapters, PopulateVerses)
+		bs.Find(TranslationNo, Section, PopulateChapters, PopulateVerses)
 
         Return bs
     End Function
@@ -62,7 +62,7 @@ Public Class Bible
     <WebMethod(BufferResponse:=True, CacheDuration:=60, Description:="Returns a list of chapters within a particular Book.  If PopulateVerses is set to True, the verses within each chapter will be returned.")> _
     Public Function GetChapters(ByVal TranslationNo As Integer, ByVal BookNo As Integer, ByVal PopulateVerses As Boolean) As Chapters
         Dim cs As New Chapters
-        Dim blnSuccess As Boolean = cs.Find(TranslationNo, BookNo, PopulateVerses)
+		cs.Find(TranslationNo, BookNo, PopulateVerses)
 
         Return cs
     End Function
@@ -70,7 +70,7 @@ Public Class Bible
     <WebMethod(BufferResponse:=True, CacheDuration:=60, Description:="Returns a list of verses within a particular Book and Chapter.")> _
     Public Function GetVerses(ByVal TranslationNo As Integer, ByVal BookNo As Integer, ByVal ChapterNo As Integer) As Verses
         Dim vs As New Verses
-        Dim blnSuccess As Boolean = vs.Find(TranslationNo, BookNo, ChapterNo)
+		vs.Find(TranslationNo, BookNo, ChapterNo)
 
         Return vs
     End Function
@@ -78,7 +78,7 @@ Public Class Bible
     <WebMethod(BufferResponse:=True, CacheDuration:=60, Description:="Returns a single verse within a particular Book and Chapter.")> _
     Public Function GetVerse(ByVal TranslationNo As Integer, ByVal BookNo As Integer, ByVal ChapterNo As Integer, ByVal VerseNo As Integer) As Verses
         Dim vs As New Verses
-        Dim blnSuccess As Boolean = vs.Find(TranslationNo, BookNo, ChapterNo, VerseNo)
+		vs.Find(TranslationNo, BookNo, ChapterNo, VerseNo)
 
         Return vs
     End Function
@@ -86,7 +86,7 @@ Public Class Bible
     <WebMethod(BufferResponse:=True, CacheDuration:=60, Description:="Returns a list of verses within a particular Book, Chapter and Verse range.")> _
     Public Function GetVerseRange(ByVal TranslationNo As Integer, ByVal BookNo As Integer, ByVal ChapterStartNo As Integer, ByVal ChapterEndNo As Integer, ByVal VerseStartNo As Integer, ByVal VerseEndNo As Integer) As Verses
         Dim vs As New Verses
-        Dim blnSuccess As Boolean = vs.Find(TranslationNo, BookNo, ChapterStartNo, ChapterEndNo, VerseStartNo, VerseEndNo)
+		vs.Find(TranslationNo, BookNo, ChapterStartNo, ChapterEndNo, VerseStartNo, VerseEndNo)
 
         Return vs
     End Function
@@ -103,7 +103,7 @@ Public Class Bible
         Dim ds As New Definitions
 
         'If ValidateUser(UserToken) Then
-        Dim blnSuccess As Boolean = ds.Find(Word.Trim, MatchExact)
+		ds.Find(Word.Trim, MatchExact)
         'Else
         '    Dim d As New Definition
         '    d.Word = "Invalid User"
@@ -118,47 +118,47 @@ Public Class Bible
     Public Function SearchBible(ByVal TranslationNo As Integer, ByVal Keywords As String, ByVal Delimiter As String, ByVal MatchAllWords As Boolean) As SearchResults
         Dim srs As New SearchResults
 
-        Dim blnSuccess As Boolean = srs.Find(TranslationNo, Keywords, Delimiter, MatchAllWords)
+		srs.Find(TranslationNo, Keywords, Delimiter, MatchAllWords)
 
         Return srs
     End Function
 
-    Private Function ValidateUser(ByVal st As SecurityToken) As Boolean
+	Private Shared Function ValidateUser(ByVal st As SecurityToken) As Boolean
 		Dim strSQL As String = "bible_ValidateUser"
 		Dim cnn As New SqlConnection(ConfigurationManager.AppSettings("DataConn"))
-        Dim cmd As New SqlCommand(strSQL, cnn)
-        Dim prmRetValue As New SqlParameter
+		Dim cmd As New SqlCommand(strSQL, cnn)
+		Dim prmRetValue As New SqlParameter
 
-        With prmRetValue
-            .Direction = ParameterDirection.ReturnValue
-            .ParameterName = "@RetValue"
-            .SqlDbType = SqlDbType.Bit
-        End With
+		With prmRetValue
+			.Direction = ParameterDirection.ReturnValue
+			.ParameterName = "@RetValue"
+			.SqlDbType = SqlDbType.Bit
+		End With
 
-        cmd.CommandType = CommandType.StoredProcedure
-        cmd.Parameters.Add(prmRetValue)
-        cmd.Parameters.Add(New SqlParameter("@Token", st.Token))
-        cmd.Parameters.Add(New SqlParameter("@Username", st.Username))
+		cmd.CommandType = CommandType.StoredProcedure
+		cmd.Parameters.Add(prmRetValue)
+		cmd.Parameters.Add(New SqlParameter("@Token", st.Token))
+		cmd.Parameters.Add(New SqlParameter("@Username", st.Username))
 
-        Dim hashedDataBytes As Byte()
-        Dim encoder As New UTF8Encoding
-        Dim md5Hasher As New MD5CryptoServiceProvider
+		Dim hashedDataBytes As Byte()
+		Dim encoder As New UTF8Encoding
+		Dim md5Hasher As New MD5CryptoServiceProvider
 
 		hashedDataBytes = md5Hasher.ComputeHash(encoder.GetBytes(st.Password))
 
-        cmd.Parameters.Add(New SqlParameter("@Password", hashedDataBytes))
+		cmd.Parameters.Add(New SqlParameter("@Password", hashedDataBytes))
 
-        cnn.Open()
-        cmd.ExecuteNonQuery()
-        cnn.Close()
+		cnn.Open()
+		cmd.ExecuteNonQuery()
+		cnn.Close()
 
-        cmd.Dispose()
-        cnn.Dispose()
+		cmd.Dispose()
+		cnn.Dispose()
 
-        If Not IsNothing(prmRetValue.Value) Then
-            Return CType(prmRetValue.Value, Boolean)
-        Else
-            Return False
-        End If
-    End Function
+		If Not IsNothing(prmRetValue.Value) Then
+			Return CType(prmRetValue.Value, Boolean)
+		Else
+			Return False
+		End If
+	End Function
 End Class
