@@ -1,27 +1,34 @@
-public class Book
+namespace BibleWebService
 {
-	private int _BookNo;
-	private string _Section;
-	private string _BookText;
-	private Chapters _Chapters;
+    public class Book
+    {
+        private int _BookNo;
+        private string _Section;
+        private string _BookText;
+        private Chapters _Chapters;
 
-	public int BookNo {
-		get { return _BookNo; }
-		set { _BookNo = value; }
-	}
+        public int BookNo
+        {
+            get { return _BookNo; }
+            set { _BookNo = value; }
+        }
 
-	public string Section {
-		get { return _Section; }
-		set { _Section = value; }
-	}
+        public string Section
+        {
+            get { return _Section; }
+            set { _Section = value; }
+        }
 
-	public string BookText {
-		get { return _BookText; }
-		set { _BookText = value; }
-	}
+        public string BookText
+        {
+            get { return _BookText; }
+            set { _BookText = value; }
+        }
 
-	public Chapters Chapters {
-		get { return _Chapters; }
-		set { _Chapters = value; }
-	}
+        public Chapters Chapters
+        {
+            get { return _Chapters; }
+            set { _Chapters = value; }
+        }
+    }
 }

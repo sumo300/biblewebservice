@@ -1,6 +1,9 @@
-public enum BookSection
+namespace BibleWebService
 {
-	OldTestament,
-	NewTestament,
-	All
+    public enum BookSection
+    {
+        OldTestament,
+        NewTestament,
+        All
+    }
 }

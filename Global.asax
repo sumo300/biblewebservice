@@ -1,1 +1,1 @@
-<%@ Application Codebehind="Global.asax.vb" Inherits="BibleWebService.Global" %>
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="BibleWebService.Global" Language="C#" %>
