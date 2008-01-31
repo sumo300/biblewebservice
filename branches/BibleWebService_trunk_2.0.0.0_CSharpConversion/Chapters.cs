@@ -1,73 +1,87 @@
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Collections;
+using System.Data;
+using System;
 
-public class Chapters : CollectionBase
+namespace BibleWebService
 {
+    public class Chapters : CollectionBase
+    {
+        public Chapter this[int index]
+        {
+            get { return this[index]; }
+            set { this[index] = value; }
+        }
 
-	public Chapter Item {
-		get { return (Chapter)list(index); }
-		set { list(index) = value; }
-	}
+        //public Chapter Item {
+        //    get { return (Chapter)list(index); }
+        //    set { list(index) = value; }
+        //}
 
-	public int Add(Chapter c)
-	{
-		return list.Add(c);
-	}
+        public int Add(Chapter c)
+        {
+            return this.Add(c);
+        }
 
-	public void Remove(Chapter c)
-	{
-		list.Remove(c);
-	}
+        public void Remove(Chapter c)
+        {
+            this.Remove(c);
+        }
 
-	public bool Find(int BibleID, int BookID, bool PopulateVerses)
-	{
-		SqlDataReader dtr = null;
+        public bool Find(int BibleID, int BookID, bool PopulateVerses)
+        {
+            SqlDataReader dtr = null;
 
-		try {
-			string strSQL = "bible_GetChapters";
-			SqlConnection cnn = new SqlConnection(ConfigurationManager.AppSettings("DataConn"));
-			SqlCommand cmd = new SqlCommand(strSQL, cnn);
-			bool blnHasRows;
+            try
+            {
+                string strSQL = "bible_GetChapters";
+                SqlConnection cnn = new SqlConnection(ConfigurationManager.AppSettings["DataConn"]);
+                SqlCommand cmd = new SqlCommand(strSQL, cnn);
+                bool blnHasRows;
 
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add(new SqlParameter("@BibleID", BibleID));
-			cmd.Parameters.Add(new SqlParameter("@BookID", BookID));
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@BibleID", BibleID));
+                cmd.Parameters.Add(new SqlParameter("@BookID", BookID));
 
-			cnn.Open();
-			dtr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                cnn.Open();
+                dtr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
-			while (dtr.Read) {
-				Chapter c = new Chapter();
-				Verses vs = new Verses();
+                while (dtr.Read())
+                {
+                    Chapter c = new Chapter();
+                    Verses vs = new Verses();
 
-				c.Chapterno = dtr.GetInt32(0);
+                    c.ChapterNo = dtr.GetInt32(0);
 
-				if (PopulateVerses)
-				{
-					vs.Find(BibleID, BookID, c.ChapterNo);
-					c.Verses = vs;
-				}
+                    if (PopulateVerses)
+                    {
+                        vs.Find(BibleID, BookID, c.ChapterNo);
+                        c.Verses = vs;
+                    }
 
-				list.Add(c);
-			}
+                    this.Add(c);
+                }
 
-			blnHasRows = dtr.HasRows;
-			dtr.Close();
-			return blnHasRows;
-		}
-		catch (Exception ex) {
-			if (dtr != null)
-			{
-				if (!dtr.IsClosed)
-				{
-					dtr.Close();
-				}
-			}
+                blnHasRows = dtr.HasRows;
+                dtr.Close();
+                return blnHasRows;
+            }
+            catch (Exception ex)
+            {
+                if (dtr != null)
+                {
+                    if (!dtr.IsClosed)
+                    {
+                        dtr.Close();
+                    }
+                }
 
-			Chapter c = new Chapter();
-			c.ChapterNo = -1;
-			List.Add(c);
-			return false;
-		}
-	}
+                Chapter c = new Chapter();
+                c.ChapterNo = -1;
+                List.Add(c);
+                return false;
+            }
+        }
+    }
 }

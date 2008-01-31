@@ -1,1 +1,1 @@
-<%@ WebService Language="vb" Codebehind="Bible.asmx.vb" Class="BibleWebService.Bible" %>
+<%@ WebService Language="C#" Codebehind="Bible.asmx.cs" Class="BibleWebService.Bible" %>

@@ -1,79 +1,94 @@
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Collections;
+using System.Data;
+using System;
 
-public class Definitions : CollectionBase
+namespace BibleWebService
 {
+    public class Definitions : CollectionBase
+    {
 
-	public Definition Item {
-		get { return (Definition)list(index); }
-		set { list(index) = value; }
-	}
+        public Definition this[int index]
+        {
+            get { return this[index]; }
+            set { this[index] = value; }
+        }
 
-	public int Add(Definition d)
-	{
-		return list.Add(d);
-	}
+        //public Definition Item {
+        //    get { return (Definition)list(index); }
+        //    set { list(index) = value; }
+        //}
 
-	public void Remove(Definition d)
-	{
-		list.Remove(d);
-	}
+        public int Add(Definition d)
+        {
+            return this.Add(d);
+        }
 
-	public bool Find(string Word, bool MatchExact)
-	{
-		return GetDefinition(Word, MatchExact);
-	}
+        public void Remove(Definition d)
+        {
+            this.Remove(d);
+        }
 
-	private bool GetDefinition(string Word, bool MatchExact)
-	{
-		SqlDataReader dtr = null;
+        public bool Find(string Word, bool MatchExact)
+        {
+            return GetDefinition(Word, MatchExact);
+        }
 
-		try {
-			string strSQL = "bible_SearchDictionary_Eastons";
-			SqlConnection cnn = new SqlConnection(ConfigurationManager.AppSettings("DataConn"));
-			SqlCommand cmd = new SqlCommand(strSQL, cnn);
-			bool blnHasRows;
+        private bool GetDefinition(string Word, bool MatchExact)
+        {
+            SqlDataReader dtr = null;
 
-			cmd.CommandType = CommandType.StoredProcedure;
-			cmd.Parameters.Add(new SqlParameter("@word", Word));
+            try
+            {
+                string strSQL = "bible_SearchDictionary_Eastons";
+                SqlConnection cnn = new SqlConnection(ConfigurationManager.AppSettings["DataConn"]);
+                SqlCommand cmd = new SqlCommand(strSQL, cnn);
+                bool blnHasRows;
 
-			if (MatchExact)
-			{
-				cmd.Parameters.Add(new SqlParameter("@exactmatch", 1));
-			}
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@word", Word));
 
-			cnn.Open();
-			dtr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                if (MatchExact)
+                {
+                    cmd.Parameters.Add(new SqlParameter("@exactmatch", 1));
+                }
 
-			while (dtr.Read) {
-				Definition d = new Definition();
+                cnn.Open();
+                dtr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
-				d.Word = dtr.GetString(0);
-				d.DefinitionText = dtr.GetString(1);
-				//d.ExactMatch = d.Word.ToLower.Equals(Word.ToLower)
-				d.ExactMatch = (string.Compare(d.Word, Word, true) == 0);
+                while (dtr.Read())
+                {
+                    Definition d = new Definition();
 
-				list.Add(d);
-			}
+                    d.Word = dtr.GetString(0);
+                    d.DefinitionText = dtr.GetString(1);
+                    //d.ExactMatch = d.Word.ToLower.Equals(Word.ToLower)
+                    d.ExactMatch = (string.Compare(d.Word, Word, true) == 0);
 
-			blnHasRows = dtr.HasRows;
-			dtr.Close();
-			return blnHasRows;
-		}
-		catch (Exception ex) {
-			if (dtr != null)
-			{
-				if (!dtr.IsClosed)
-				{
-					dtr.Close();
-				}
-			}
+                    this.Add(d);
+                }
 
-			Definition d = new Definition();
-			d.Word = "Error";
-			d.DefinitionText = ex.ToString;
-			List.Add(d);
-			return false;
-		}
-	}
+                blnHasRows = dtr.HasRows;
+                dtr.Close();
+                return blnHasRows;
+            }
+            catch (Exception ex)
+            {
+                if (dtr != null)
+                {
+                    if (!dtr.IsClosed)
+                    {
+                        dtr.Close();
+                    }
+                }
+
+                Definition d = new Definition();
+                d.Word = "Error";
+                d.DefinitionText = ex.ToString();
+                List.Add(d);
+                return false;
+            }
+        }
+    }
 }
