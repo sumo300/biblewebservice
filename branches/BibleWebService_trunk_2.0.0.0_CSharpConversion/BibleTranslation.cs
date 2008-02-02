@@ -2,9 +2,9 @@ namespace BibleWebService
 {
     public class BibleTranslation
     {
-        private int _BibleNo;
         private string _BibleAbbr;
         private string _BibleName;
+        private int _BibleNo;
 
         public int BibleNo
         {

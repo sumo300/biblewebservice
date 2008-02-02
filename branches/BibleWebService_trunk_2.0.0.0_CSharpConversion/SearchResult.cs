@@ -2,11 +2,11 @@ namespace BibleWebService
 {
     public class SearchResult
     {
-        private int _MatchCount;
-        private string _Section;
         private int _BookNo;
         private string _BookText;
         private int _ChapterNo;
+        private int _MatchCount;
+        private string _Section;
         private int _VerseNo;
         private string _VerseText;
 

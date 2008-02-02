@@ -3,9 +3,9 @@ namespace BibleWebService
     public class Book
     {
         private int _BookNo;
-        private string _Section;
         private string _BookText;
         private Chapters _Chapters;
+        private string _Section;
 
         public int BookNo
         {

@@ -2,10 +2,9 @@ namespace BibleWebService
 {
     public class SecurityToken
     {
+        private string _Password;
         private string _Token;
         private string _Username;
-        private string _Password;
-        private string _EncryptedPassword;
 
         public string Token
         {

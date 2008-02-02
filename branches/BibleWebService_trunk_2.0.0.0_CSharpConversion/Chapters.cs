@@ -1,8 +1,8 @@
-using System.Data.SqlClient;
-using System.Configuration;
-using System.Collections;
-using System.Data;
 using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace BibleWebService
 {
@@ -21,12 +21,12 @@ namespace BibleWebService
 
         public int Add(Chapter c)
         {
-            return this.Add(c);
+            return Add(c);
         }
 
         public void Remove(Chapter c)
         {
-            this.Remove(c);
+            Remove(c);
         }
 
         public bool Find(int BibleID, int BookID, bool PopulateVerses)
@@ -60,14 +60,14 @@ namespace BibleWebService
                         c.Verses = vs;
                     }
 
-                    this.Add(c);
+                    Add(c);
                 }
 
                 blnHasRows = dtr.HasRows;
                 dtr.Close();
                 return blnHasRows;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 if (dtr != null)
                 {

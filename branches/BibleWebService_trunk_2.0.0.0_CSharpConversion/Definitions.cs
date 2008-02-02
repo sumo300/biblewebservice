@@ -1,14 +1,13 @@
-using System.Data.SqlClient;
-using System.Configuration;
-using System.Collections;
-using System.Data;
 using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace BibleWebService
 {
     public class Definitions : CollectionBase
     {
-
         public Definition this[int index]
         {
             get { return this[index]; }
@@ -22,12 +21,12 @@ namespace BibleWebService
 
         public int Add(Definition d)
         {
-            return this.Add(d);
+            return Add(d);
         }
 
         public void Remove(Definition d)
         {
-            this.Remove(d);
+            Remove(d);
         }
 
         public bool Find(string Word, bool MatchExact)
@@ -66,7 +65,7 @@ namespace BibleWebService
                     //d.ExactMatch = d.Word.ToLower.Equals(Word.ToLower)
                     d.ExactMatch = (string.Compare(d.Word, Word, true) == 0);
 
-                    this.Add(d);
+                    Add(d);
                 }
 
                 blnHasRows = dtr.HasRows;

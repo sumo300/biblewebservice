@@ -2,9 +2,9 @@ namespace BibleWebService
 {
     public class Definition
     {
-        private string _Word;
         private string _DefinitionText;
         private bool _ExactMatch;
+        private string _Word;
 
         public string Word
         {
