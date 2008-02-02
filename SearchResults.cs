@@ -1,8 +1,8 @@
-using System.Data.SqlClient;
-using System.Configuration;
-using System.Collections;
-using System.Data;
 using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace BibleWebService
 {
@@ -21,12 +21,12 @@ namespace BibleWebService
 
         public int Add(SearchResult sr)
         {
-            return this.Add(sr);
+            return Add(sr);
         }
 
         public void Remove(SearchResult sr)
         {
-            this.Remove(sr);
+            Remove(sr);
         }
 
         public bool Find(int BibleID, string Keywords, string Delimiter, bool AllWords)
@@ -63,7 +63,7 @@ namespace BibleWebService
                     sr.VerseNo = dtr.GetInt32(5);
                     sr.VerseText = dtr.GetString(6);
                     sr.MatchCount = dtr.GetInt32(7);
-                    this.Add(sr);
+                    Add(sr);
                 }
 
                 blnHasRows = dtr.HasRows;

@@ -1,22 +1,30 @@
-using System.Data.SqlClient;
+using System;
 using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Security.Cryptography;
 using System.Text;
-using System;
-using System.Data;
 
 namespace BibleWebService
 {
     public class User
     {
-        private long _UserID;
-        private string _Token;
-        private string _Username;
-        private string _Password;
+        private readonly DateTime _CreatedOn;
+        private readonly DateTime _Expires;
+        private readonly string _Token;
+        private readonly long _UserID;
         private string _Name;
+        private string _Password;
+        private string _Username;
         private string _WebSite;
-        private DateTime _CreatedOn;
-        private DateTime _Expires;
+
+        public User(DateTime _CreatedOn, DateTime _Expires, string _Token, long _UserID)
+        {
+            this._CreatedOn = _CreatedOn;
+            this._UserID = _UserID;
+            this._Token = _Token;
+            this._Expires = _Expires;
+        }
 
         public long UserID
         {
@@ -108,7 +116,12 @@ namespace BibleWebService
             }
         }
 
-        public bool Validate(string Token, string Username, string Password)
+        public bool Validate(string username, string password)
+        {
+            return Validate("", username, password);
+        }
+
+        public bool Validate(string token, string username, string password)
         {
             string strSQL = "bible_ValidateUser";
             SqlConnection cnn = new SqlConnection(ConfigurationManager.AppSettings["DataConn"]);
@@ -119,9 +132,8 @@ namespace BibleWebService
             MD5CryptoServiceProvider md5Hasher = new MD5CryptoServiceProvider();
             byte[] hashedBytes;
             UTF8Encoding encoder = new UTF8Encoding();
-            int intRowsAffected;
 
-            hashedBytes = md5Hasher.ComputeHash(encoder.GetBytes(Password));
+            hashedBytes = md5Hasher.ComputeHash(encoder.GetBytes(password));
 
             {
                 prmRetVal.Direction = ParameterDirection.ReturnValue;
@@ -133,7 +145,7 @@ namespace BibleWebService
                 prmToken.Direction = ParameterDirection.Input;
                 prmToken.ParameterName = "@Token";
                 prmToken.SqlDbType = SqlDbType.UniqueIdentifier;
-                prmToken.Value = Token;
+                prmToken.Value = token;
             }
 
             {
@@ -146,13 +158,13 @@ namespace BibleWebService
             cmd.CommandType = CommandType.StoredProcedure;
             cmd.Parameters.Add(prmRetVal);
             cmd.Parameters.Add(prmToken);
-            cmd.Parameters.Add(new SqlParameter("@Username", Username));
+            cmd.Parameters.Add(new SqlParameter("@Username", username));
             cmd.Parameters.Add(prmPassword);
             cnn.Open();
-            intRowsAffected = cmd.ExecuteNonQuery();
+            cmd.ExecuteNonQuery();
             cnn.Close();
 
-            return (bool)prmRetVal.Value;
+            return (bool) prmRetVal.Value;
         }
     }
 }

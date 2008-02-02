@@ -1,14 +1,13 @@
-using System.Data.SqlClient;
-using System.Configuration;
-using System.Collections;
-using System.Data;
 using System;
+using System.Collections;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace BibleWebService
 {
     public class Verses : CollectionBase
     {
-
         public Verse this[int index]
         {
             get { return this[index]; }
@@ -22,12 +21,12 @@ namespace BibleWebService
 
         public int Add(Verse v)
         {
-            return this.Add(v);
+            return Add(v);
         }
 
         public void Remove(Verse v)
         {
-            this.Remove(v);
+            Remove(v);
         }
 
         public bool Find(int BibleID, int BookID, int Chapter)
@@ -55,7 +54,7 @@ namespace BibleWebService
 
                     v.VerseNo = dtr.GetInt32(4);
                     v.VerseText = dtr.GetString(5);
-                    this.Add(v);
+                    Add(v);
                 }
 
                 blnHasRows = dtr.HasRows;
@@ -122,7 +121,7 @@ namespace BibleWebService
 
                     v.VerseNo = dtr.GetInt32(4);
                     v.VerseText = dtr.GetString(5);
-                    this.Add(v);
+                    Add(v);
                 }
 
                 blnHasRows = dtr.HasRows;
@@ -191,7 +190,7 @@ namespace BibleWebService
 
                     v.VerseNo = dtr.GetInt32(4);
                     v.VerseText = dtr.GetString(5);
-                    this.Add(v);
+                    Add(v);
                 }
 
                 blnHasRows = dtr.HasRows;
@@ -242,7 +241,6 @@ namespace BibleWebService
                 string strSQL = "bible_RandomVerse";
                 SqlConnection cnn = new SqlConnection(ConfigurationManager.AppSettings["DataConn"]);
                 SqlCommand cmd = new SqlCommand(strSQL, cnn);
-                bool blnHasRows;
                 Books bs = new Books();
                 Chapters cs = new Chapters();
 
@@ -264,7 +262,7 @@ namespace BibleWebService
                     c.ChapterNo = dtr.GetInt32(3);
                     v.VerseNo = dtr.GetInt32(4);
                     v.VerseText = dtr.GetString(5);
-                    this.Add(v);
+                    Add(v);
 
                     c.Verses = this;
                     cs.Add(c);
@@ -272,7 +270,6 @@ namespace BibleWebService
                     bs.Add(b);
                 }
 
-                blnHasRows = dtr.HasRows;
                 dtr.Close();
 
                 return bs;
