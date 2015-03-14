@@ -1,0 +1,1 @@
+A Bible Web service written in VB.NET and recently converted to C#.  Database holds 5 different translations.  Book lists, chapter lists, search, and random verse implemented as Web methods.
